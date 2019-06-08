@@ -1,0 +1,15 @@
+While coding doing sha 256 in java i learned =>
+
+1. we will work with signed integers only.
+2. parseInt is unsigned  i.e it will give unsigned resut which will make output larger.
+	so to minimize i use BigInteger. E.G
+		new BigInteger(str,2).intValue();
+	this wil return signed value in int.
+3. this right shift (>>>) is unsigned right shift and we use this for right shift.
+4. Integer.rotateRight() function will provide signed output. 
+
+
+Refrences:-
+https://stackoverflow.com/questions/8888946/converting-32-bit-binary-string-with-integer-parseint-fails/18509050#18509050
+https://en.wikipedia.org/wiki/SHA-2
+https://stackoverflow.com/questions/2811319/difference-between-and

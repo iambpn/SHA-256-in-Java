@@ -1,0 +1,5 @@
+https://en.wikipedia.org/wiki/SHA-2 
+https://www.movable-type.co.uk/scripts/sha256.html 
+https://stackoverflow.com/questions/17388177/is-there-a-limit-for-sha256-input 
+https://www.youtube.com/watch?v=mbekM2ErHfM&t=146s 
+https://en.wikipedia.org/wiki/Secure_Hash_Algorithms 
