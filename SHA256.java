@@ -1,7 +1,7 @@
-
 import java.math.BigInteger;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
+// only valid for 55 character long
 public class SHA256 {
 	private int hash [] = {0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19};
 	private int k [] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -37,14 +37,14 @@ public class SHA256 {
 		//calculating digest
 		String digest[] = new String [8];
 		
-		digest[0]=Integer.toHexString(hash[0]);
-		digest[1]=Integer.toHexString(hash[1]);
-		digest[2]=Integer.toHexString(hash[2]);
-		digest[3]=Integer.toHexString(hash[3]);
-		digest[4]=Integer.toHexString(hash[4]);
-		digest[5]=Integer.toHexString(hash[5]);
-		digest[6]=Integer.toHexString(hash[6]);
-		digest[7]=Integer.toHexString(hash[7]);
+		digest[0]=Integer.toHexString(this.hash[0]);
+		digest[1]=Integer.toHexString(this.hash[1]);
+		digest[2]=Integer.toHexString(this.hash[2]);
+		digest[3]=Integer.toHexString(this.hash[3]);
+		digest[4]=Integer.toHexString(this.hash[4]);
+		digest[5]=Integer.toHexString(this.hash[5]);
+		digest[6]=Integer.toHexString(this.hash[6]);
+		digest[7]=Integer.toHexString(this.hash[7]);
 		
 		for(int i=0;i!= digest.length;i++) {
 			if(digest[i].length()!=8) {
@@ -66,11 +66,17 @@ public class SHA256 {
 		String binaryMsg="";
 		
 		// converting message into ASCII value 
-		byte intMsg[] = msg.getBytes();
+		byte intMsg[] = msg.getBytes(StandardCharsets.UTF_8);
+		String str = "";
 		
 		//converting message into binary
 		for(int i=0; i!= intMsg.length;i++) {
-			String str = padLeft(Integer.toBinaryString(intMsg[i]),8); 
+			if((int)intMsg[i] < 0) {
+				str = padLeft(Integer.toBinaryString((int)intMsg[i]+256),8); //(int)intMsg[i]+256 because to convert signed(-ve) byte into unsigned(+ve)
+			}
+			else {
+				str = padLeft(Integer.toBinaryString((int)intMsg[i]),8); 
+			}
 			binaryMsg = binaryMsg+str;
 		}
 		
@@ -83,8 +89,8 @@ public class SHA256 {
 		}
 		
 		//adding length of original binary message(64 bit)
-		binaryMsg = binaryMsg + padLeft(Integer.toBinaryString(length),64); 
-		
+		binaryMsg = binaryMsg + padLeft(Integer.toBinaryString(length),64);
+
 		return binaryMsg;
 	}
 	
@@ -130,14 +136,14 @@ public class SHA256 {
 	private void compression(int w[]) {
 		
 		//copying hash
-		int a = hash[0];
-		int b = hash[1];
-		int c = hash[2];
-		int d = hash[3];
-		int e = hash[4];
-		int f = hash[5];
-		int g = hash[6];
-		int h = hash[7];
+		int a = this.hash[0];
+		int b = this.hash[1];
+		int c = this.hash[2];
+		int d = this.hash[3];
+		int e = this.hash[4];
+		int f = this.hash[5];
+		int g = this.hash[6];
+		int h = this.hash[7];
 		
 		//compression loop
 		int s1,ch,temp1,s0,maj,temp2;
@@ -159,37 +165,26 @@ public class SHA256 {
 	        a = temp1 + temp2;
 		}
 		
-		hash[0]=hash[0]+a;
-		hash[1]=hash[1]+b;
-		hash[2]=hash[2]+c;
-		hash[3]=hash[3]+d;
-		hash[4]=hash[4]+e;
-		hash[5]=hash[5]+f;
-		hash[6]=hash[6]+g;
-		hash[7]=hash[7]+h;	
+		this.hash[0]=this.hash[0]+a;
+		this.hash[1]=this.hash[1]+b;
+		this.hash[2]=this.hash[2]+c;
+		this.hash[3]=this.hash[3]+d;
+		this.hash[4]=this.hash[4]+e;
+		this.hash[5]=this.hash[5]+f;
+		this.hash[6]=this.hash[6]+g;
+		this.hash[7]=this.hash[7]+h;	
 	}
 	
 	
 	/*
-	 *  padding on left side with 0
+	 *  padding on left side with 0 (works both padding or slicing)
 	 *  takes string and total no of bit
 	 *  returns array
 	 *  */ 
 	private String padLeft(String str,int bit) {
-		int pad=bit-str.length();
-		int i=0;
-		if(i>=0) {
-			while(i!=pad) {
-				str = "0"+str;
-				i++;
-			}
-			return str;
-		}
-		else {
-			System.out.println("Error padding length shorter than string length");
-			return "";
-		}
+		return String.format("%"+bit+"s", str).replace(' ', '0');
 	}
+	
 	
 	/*
 	 *  divide in equal no of chunks 
@@ -210,13 +205,7 @@ public class SHA256 {
 		return chunk;
 	}
 	
-	
-	//Main method 
-	public static void main(String[] args) {
-		System.out.println("Enter Message to hash:");
-		String msg = new Scanner(System.in).nextLine();
-		System.out.println(new SHA256().generateHash(msg));
-
+	public String hashString(String text) {
+		return generateHash(text);	
 	}
-
 }
