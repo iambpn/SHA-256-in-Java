@@ -1,7 +1,7 @@
 While coding sha 256 in java i learned following things:-
 
 1. we need to work with signed integers only.
-2. parseInt is unsigned  i.e it will give unsigned resut which will make output larger so to minimize it i used BigInteger. for example: 
+2. parseInt is unsigned  i.e it will give unsigned result which will make output larger so to minimize it i used BigInteger. for example: 
 `new BigInteger(str,2).intValue();` this wil return signed integer value.
 3. Right shift (>>>) is unsigned right shift and we use this for right shifting bits.
 4. Integer.rotateRight() function will provide signed output. 
